@@ -274,7 +274,7 @@ class JpegsPcmFromFile extends JpegsFromFFmpegBase
 				this.command.output( this.output );
 
 				let outputVideoOptions = this.config.outputVideoOptions || [ 
-					mapVideo,
+					'-map 0:V:0',
 					'-f mjpeg', 
 					'-c:v mjpeg'
 				];
@@ -311,14 +311,11 @@ class JpegsPcmFromFile extends JpegsFromFFmpegBase
 				}
 
 				let outputAudioOptions = this.config.outputAudioOptions || [ 
-					mapAudio,
-					'-f fifo',
-					'-fifo_format s16le',
-					'-drop_pkts_on_overflow 1',
+					'-map 0:a:0',
+					'-f s16le',
 					'-c:a pcm_s16le',
 					'-ar 44100', '-ac 2', 
 					'-fflags nobuffer',
-					'-y'
 				];
 
 				this.command.outputOptions( outputAudioOptions );
