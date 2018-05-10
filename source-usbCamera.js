@@ -160,7 +160,17 @@ module.exports = class UsbCameraSource
 					console.debug(stdout);
 					console.debug(stderr);
 					this.isRunning = false;
-					this.active && !this.advBox.active && this.advBox.start();
+
+					let errStr = stderr.toString();
+
+					// fix: some usb cam generate Invalid data makes ffmpeg exits. quick restart.
+					if (errStr.indexOf('Invalid data found')) {
+						this.start(null, (cmdline)=>{
+							console.log('Invalid data, restart: ', cmdline);
+						});
+					} else {
+						this.active && !this.advBox.active && this.advBox.start();
+					}
 				},
 				//errCallback
 				(err, stdout, stderr) => {
